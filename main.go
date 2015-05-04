@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 )
 
@@ -12,6 +13,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("Server running at http://localhost:8000")
-	log.Fatal(http.ListenAndServe(":8000", http.FileServer(http.Dir(d))))
+	addr := os.Args[1]
+	if addr == "" {
+		addr = ":8000"
+	}
+
+	log.Println("Server running at " + addr)
+	log.Fatal(http.ListenAndServe(addr, http.FileServer(http.Dir(d))))
 }
