@@ -28,8 +28,7 @@ go build
 
 The main code block will have the following basic structure.
 
-### main.go
-``` go
+``` go main.go
 package main
 
 import (
@@ -49,8 +48,7 @@ The logic to be implemented is pretty straight forward.
  
 The base directory for now will always be the current working directory to keep it simple. However someone may want to bind to a different address and/or port combination. The default port will be `8080` on all publicly accessible addresses.
  
-### "main implementation"
-``` go
+``` go "main implementation"
 <<<base directory>>>
 <<<address and port>>>
 <<<listen and serve>>>
@@ -58,8 +56,7 @@ The base directory for now will always be the current working directory to keep 
 
 Currently only a few packages need to be imported from the Go standard library.
 
-### "main.go imports"
-``` go
+``` go "main.go imports"
 "log"
 "net/http"
 "os"
@@ -70,8 +67,7 @@ Currently only a few packages need to be imported from the Go standard library.
 
 The files served will always be from the current working directory. So if executed at `/tmp` then all directories and files will be accessible from the address being served.
 
-### "base directory"
-``` go
+``` go "base directory"
 d, err := filepath.Abs(".")
 if err != nil {
 	log.Fatal(err)
@@ -88,8 +84,7 @@ serve 0.0.0.0:8081
 
 This will bind to the address `0.0.0.0` on port `8081`.
 
-### "address and port"
-``` go
+``` go "address and port"
 addr := "localhost:8080"
 if len(os.Args) > 1 {
 	addr := os.Args[1]
@@ -103,8 +98,7 @@ if len(os.Args) > 1 {
 
 A basic implementation of the file server would result in the following snippet.
 
-### "listen and serve"
-``` go
+``` go "listen and serve"
 log.Println("Server running at " + addr)
 log.Fatal(http.ListenAndServe(addr, http.FileServer(http.Dir(d))))
 ```
@@ -113,8 +107,7 @@ log.Fatal(http.ListenAndServe(addr, http.FileServer(http.Dir(d))))
 
 It would be nice to know what files are being accessed from the server. In order to accomplish this we can inject, or wrap, our logic for serving files with another function to log each incoming request.
 
-### main.go +=
-``` go
+``` go main.go +=
 
 // Logger middleware for HTTP handling.
 func Logger(h http.Handler) http.Handler {
@@ -127,8 +120,7 @@ func Logger(h http.Handler) http.Handler {
 
 And now we want to inject the request logging around the file server.
 
-### "listen and serve"
-``` go
+``` go "listen and serve"
 log.Println("Server running at " + addr)
 log.Fatal(http.ListenAndServe(addr, Logger(http.FileServer(http.Dir(d)))))
 ```
